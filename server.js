@@ -35,11 +35,11 @@ app.get('/api/equipment/filter', (req, res) => {
 // read by id
 app.get('/api/equipment/:id', (req, res) => {
   const id = Number(req.params.id);
-  const item = equipment[id - 1];
-  if (!item) {
+
+  if (!Number.isInteger(id) || id < 0 || id >= equipment.length) {
     return res.status(404).json({ message: 'Equipment not found' });
   }
-  res.status(200).json(item);
+  res.status(200).json(equipment[id]);
 });
 
 // create new 
@@ -62,30 +62,27 @@ app.post('/api/equipment', (req, res) => {
 app.put('/api/equipment/:id', (req, res) => {
   const id = Number(req.params.id);
   const updatedEquipment = req.body;
-  const index = equipment.findIndex(
-    (item, index) => index + 1 === id
-  );
-  if (index === -1) {
+
+  if (!Number.isInteger(id) || id < 0 || id >= equipment.length) {
     return res.status(404).json({
       message: 'Equipment not found'
     });
   }
-  equipment[index] = updatedEquipment;
-  res.status(200).json(equipment[index]);
+  equipment[id] = updatedEquipment;
+  res.status(200).json(equipment[id]);
 });
 
 // delete an equipment
 app.delete('/api/equipment/:id', (req, res) => {
   const id = Number(req.params.id);
-  const index = equipment.findIndex(
-    (item, index) => index + 1 === id
-  );
-  if (index === -1) {
+  
+  if (!Number.isInteger(id) || id < 0 || id >= equipment.length) {
     return res.status(404).json({
       message: 'Equipment not found'
     });
   }
-  const deletedEquipment = equipment.splice(index, 1);
+
+  const deletedEquipment = equipment.splice(id, 1);
   res.status(200).json({
     message: 'Equipment deleted successfully',
     equipment: deletedEquipment[0]
